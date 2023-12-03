@@ -1,0 +1,15 @@
+#
+# Folders
+
+# IDE or editor-specific files.
+.idea/
+.vscode/
+
+# Build files.
+bin/
+
+#
+# Files
+
+# Log files.
+*.log
