@@ -60,12 +60,12 @@ func (buc *Bucket) Add(node *Node) bool {
 	return true
 }
 
-func (b *Bucket) Remove(node *Node) bool {
-	removed := remove(b.nodes, node)
+func (buc *Bucket) Remove(node *Node) bool {
+	removed := remove(buc.nodes, node)
 	if removed {
-		b.addFromReplacements()
+		buc.addFromReplacements()
 	}
-	return remove(b.replacements, node) || removed
+	return remove(buc.replacements, node) || removed
 }
 
 func (buc *Bucket) FindNodeByKey(key *big.Int) *Node {
