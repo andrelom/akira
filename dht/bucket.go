@@ -61,11 +61,11 @@ func (buc *Bucket) Add(node *Node) bool {
 }
 
 func (buc *Bucket) Remove(node *Node) bool {
-	removed := remove(buc.nodes, node)
+	removed := remove(&buc.nodes, node)
 	if removed {
 		buc.addFromReplacements()
 	}
-	return remove(buc.replacements, node) || removed
+	return remove(&buc.replacements, node) || removed
 }
 
 func (buc *Bucket) FindNodeByKey(key *big.Int) *Node {
@@ -149,10 +149,10 @@ func toTailIfExists(nodes []*Node, node *Node) bool {
 	return false
 }
 
-func remove(nodes []*Node, target *Node) bool {
-	for idx, node := range nodes {
+func remove(nodes *[]*Node, target *Node) bool {
+	for idx, node := range *nodes {
 		if node.Key.Cmp(target.Key) == 0 {
-			nodes = append(nodes[:idx], nodes[idx+1:]...)
+			*nodes = append((*nodes)[:idx], (*nodes)[idx+1:]...)
 			return true
 		}
 	}
