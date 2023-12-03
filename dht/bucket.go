@@ -49,7 +49,7 @@ func (buc *Bucket) FitsInRange(key *big.Int) bool {
 }
 
 func (buc *Bucket) Add(node *Node) bool {
-	if moved := toTailIfExists(buc.nodes, node); moved {
+	if moved := toTailIfExists(&buc.nodes, node); moved {
 		return true
 	}
 	if isFull(buc.nodes) {
@@ -89,7 +89,7 @@ func (buc *Bucket) Split() (*Bucket, *Bucket) {
 }
 
 func (buc *Bucket) addToReplacements(node *Node) {
-	if moved := toTailIfExists(buc.replacements, node); moved {
+	if moved := toTailIfExists(&buc.replacements, node); moved {
 		return
 	}
 	if isFull(buc.replacements) {
@@ -135,14 +135,14 @@ func getNodeByKey(nodes []*Node, key *big.Int) *Node {
 	return nil
 }
 
-func toTailIfExists(nodes []*Node, node *Node) bool {
-	if getNodeByKey(nodes, node.Key) == nil {
+func toTailIfExists(nodes *[]*Node, node *Node) bool {
+	if getNodeByKey(*nodes, node.Key) == nil {
 		return false
 	}
-	for idx, val := range nodes {
+	for idx, val := range *nodes {
 		if val.Key.Cmp(node.Key) == 0 {
-			nodes = append(nodes[:idx], nodes[idx+1:]...)
-			nodes = append(nodes, node)
+			*nodes = append((*nodes)[:idx], (*nodes)[idx+1:]...)
+			*nodes = append(*nodes, node)
 			return true
 		}
 	}
