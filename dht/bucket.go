@@ -111,15 +111,6 @@ func isFull(nodes []*Node) bool {
 	return K <= len(nodes)
 }
 
-func getNodeByKey(nodes []*Node, key *big.Int) *Node {
-	for _, node := range nodes {
-		if node.Key.Cmp(key) == 0 {
-			return node
-		}
-	}
-	return nil
-}
-
 func getSharedPrefix(values []string) string {
 	if len(values) == 0 {
 		return ""
@@ -133,6 +124,15 @@ func getSharedPrefix(values []string) string {
 		prefix = prefix[:idx]
 	}
 	return prefix
+}
+
+func getNodeByKey(nodes []*Node, key *big.Int) *Node {
+	for _, node := range nodes {
+		if node.Key.Cmp(key) == 0 {
+			return node
+		}
+	}
+	return nil
 }
 
 func toTailIfExists(nodes []*Node, node *Node) bool {
