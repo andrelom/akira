@@ -2,9 +2,6 @@ package dht
 
 import "math/big"
 
-const K = 20
-const B = 20
-
 type Bucket struct {
 	lower, upper *big.Int
 	nodes        []*Node
