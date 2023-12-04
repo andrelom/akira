@@ -12,9 +12,8 @@ type Key struct {
 }
 
 func NewKey() *Key {
-	data := getRandomBytes()
 	return &Key{
-		data: new(big.Int).Abs(new(big.Int).SetBytes(data)),
+		data: getRandomKey(),
 	}
 }
 
@@ -41,10 +40,11 @@ func isValid(bytes []byte) bool {
 	return len(bytes) == K
 }
 
-func getRandomBytes() []byte {
+func getRandomKey() *big.Int {
 	hash := sha1.New()
 	bytes := make([]byte, 16)
 	rand.Read(bytes)
 	hash.Write(bytes)
-	return hash.Sum(nil)
+	data := hash.Sum(nil)
+	return new(big.Int).Abs(new(big.Int).SetBytes(data))
 }
