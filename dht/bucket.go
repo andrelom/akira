@@ -31,18 +31,18 @@ func NewBucketWithRange(lower, upper *big.Int) *Bucket {
 func (buc *Bucket) Depth() int {
 	values := make([]string, len(buc.nodes))
 	for i, node := range buc.nodes {
-		values[i] = node.Key.ToBigInt().Text(2)
+		values[i] = node.Key.BigInt().Text(2)
 	}
 	shared := getSharedPrefix(values)
 	return len(shared)
 }
 
 func (buc *Bucket) Fits(key *Key) bool {
-	return key.ToBigInt().Cmp(buc.upper) < 0
+	return key.BigInt().Cmp(buc.upper) < 0
 }
 
 func (buc *Bucket) FitsInRange(key *Key) bool {
-	return key.ToBigInt().Cmp(buc.lower) >= 0 && buc.upper.Cmp(key.ToBigInt()) >= 0
+	return key.BigInt().Cmp(buc.lower) >= 0 && buc.upper.Cmp(key.BigInt()) >= 0
 }
 
 func (buc *Bucket) Add(node *Node) bool {
@@ -76,7 +76,7 @@ func (buc *Bucket) Split() (*Bucket, *Bucket) {
 	lowerBucket := NewBucketWithRange(buc.lower, middle)
 	upperBucket := NewBucketWithRange(new(big.Int).Add(middle, big.NewInt(1)), buc.upper)
 	for _, node := range nodes {
-		if node.Key.ToBigInt().Cmp(middle) <= 0 {
+		if node.Key.BigInt().Cmp(middle) <= 0 {
 			lowerBucket.Add(node)
 		} else {
 			upperBucket.Add(node)
@@ -125,7 +125,7 @@ func getSharedPrefix(values []string) string {
 
 func getNodeByKey(nodes []*Node, key *Key) *Node {
 	for _, node := range nodes {
-		if node.Key.ToBigInt().Cmp(key.ToBigInt()) == 0 {
+		if node.Key.BigInt().Cmp(key.BigInt()) == 0 {
 			return node
 		}
 	}
@@ -137,7 +137,7 @@ func toTailIfExists(nodes *[]*Node, node *Node) bool {
 		return false
 	}
 	for idx, val := range *nodes {
-		if val.Key.ToBigInt().Cmp(node.Key.ToBigInt()) == 0 {
+		if val.Key.BigInt().Cmp(node.Key.BigInt()) == 0 {
 			*nodes = append((*nodes)[:idx], (*nodes)[idx+1:]...)
 			*nodes = append(*nodes, node)
 			return true
@@ -148,7 +148,7 @@ func toTailIfExists(nodes *[]*Node, node *Node) bool {
 
 func remove(nodes *[]*Node, target *Node) bool {
 	for idx, node := range *nodes {
-		if node.Key.ToBigInt().Cmp(target.Key.ToBigInt()) == 0 {
+		if node.Key.BigInt().Cmp(target.Key.BigInt()) == 0 {
 			*nodes = append((*nodes)[:idx], (*nodes)[idx+1:]...)
 			return true
 		}
