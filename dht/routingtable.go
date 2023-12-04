@@ -17,31 +17,31 @@ func NewRoutingTable(root *Node) *RoutingTable {
 	}
 }
 
-func (rt *RoutingTable) AddNode(node *Node) bool {
-	bucket := rt.getBucketFor(node.Key)
+func (rou *RoutingTable) AddNode(node *Node) bool {
+	bucket := rou.getBucketFor(node.Key)
 	// This will succeed unless the bucket is full.
 	if bucket.Add(node) {
 		return true
 	}
 	// Per section 4.2 of the paper, split if the bucket has the own node in its range or
 	// if the depth is not congruent to 0 mod 5.
-	if bucket.FitsInRange(rt.root.Key) || bucket.Depth()%5 != 0 {
-		return rt.splitAndAddNode(bucket, node)
+	if bucket.FitsInRange(rou.root.Key) || bucket.Depth()%5 != 0 {
+		return rou.splitAndAddNode(bucket, node)
 	}
 	// TODO: Section 4.1 of the Kademlia paper!
 	panic(errors.New("TODO: Section 4.1 of the Kademlia paper!"))
 }
 
-func (rt *RoutingTable) RemoveNode(node *Node) bool {
-	return rt.getBucketFor(node.Key).Remove(node)
+func (rou *RoutingTable) RemoveNode(node *Node) bool {
+	return rou.getBucketFor(node.Key).Remove(node)
 }
 
-func (rt *RoutingTable) FindNodeByKey(key *Key) *Node {
-	return rt.getBucketFor(key).FindNodeByKey(key)
+func (rou *RoutingTable) FindNodeByKey(key *Key) *Node {
+	return rou.getBucketFor(key).FindNodeByKey(key)
 }
 
-func (rt *RoutingTable) FindNearbyNodesByKey(key *Key) []*Node {
-	nodes := rt.getBucketFor(key).toSlice()
+func (rou *RoutingTable) FindNearbyNodesByKey(key *Key) []*Node {
+	nodes := rou.getBucketFor(key).toSlice()
 	sort.Slice(nodes, func(i, j int) bool {
 		return nodes[i].Key.DistanceTo(key).Cmp(nodes[j].Key.DistanceTo(key)) < 0
 	})
@@ -56,8 +56,8 @@ func (buc *Bucket) toSlice() []*Node {
 	return nodes
 }
 
-func (rt *RoutingTable) getBucketFor(key *Key) *Bucket {
-	for _, bucket := range rt.buckets {
+func (rou *RoutingTable) getBucketFor(key *Key) *Bucket {
+	for _, bucket := range rou.buckets {
 		if bucket.Fits(key) {
 			return bucket
 		}
@@ -66,9 +66,9 @@ func (rt *RoutingTable) getBucketFor(key *Key) *Bucket {
 	panic(errors.New("no suitable bucket found"))
 }
 
-func (rt *RoutingTable) splitAndAddNode(bucket *Bucket, node *Node) bool {
+func (rou *RoutingTable) splitAndAddNode(bucket *Bucket, node *Node) bool {
 	lowerIndex := -1
-	for idx, buc := range rt.buckets {
+	for idx, buc := range rou.buckets {
 		if buc == bucket {
 			lowerIndex = idx
 			break
@@ -80,8 +80,8 @@ func (rt *RoutingTable) splitAndAddNode(bucket *Bucket, node *Node) bool {
 	}
 	upperIndex := lowerIndex + 1
 	lowerBucket, upperBucket := bucket.Split()
-	rt.buckets[lowerIndex] = lowerBucket
-	rt.buckets = append(rt.buckets[:upperIndex], upperBucket)
-	rt.buckets = append(rt.buckets, &Bucket{}) // Placeholder for the new bucket.
-	return rt.AddNode(node)
+	rou.buckets[lowerIndex] = lowerBucket
+	rou.buckets = append(rou.buckets[:upperIndex], upperBucket)
+	rou.buckets = append(rou.buckets, &Bucket{}) // Placeholder for the new bucket.
+	return rou.AddNode(node)
 }
