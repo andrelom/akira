@@ -30,8 +30,8 @@ func NewBucketWithRange(lower, upper *big.Int) *Bucket {
 
 func (buc *Bucket) Depth() int {
 	values := make([]string, len(buc.nodes))
-	for i, node := range buc.nodes {
-		values[i] = node.Key.BigInt().Text(2)
+	for idx, node := range buc.nodes {
+		values[idx] = node.Key.BigInt().Text(2)
 	}
 	shared := getSharedPrefix(values)
 	return len(shared)
