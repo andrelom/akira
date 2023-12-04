@@ -26,14 +26,14 @@ func NewKeyFromBytes(bytes []byte) (*Key, error) {
 	}, nil
 }
 
+func (key *Key) BigInt() *big.Int {
+	return key.data
+}
+
 func (key *Key) DistanceTo(target *Key) *big.Int {
 	// XOR can produce negative numbers when dealing with BigIntegers,
 	// so we use Abs to ensure the distance is positive.
 	return new(big.Int).Abs(new(big.Int).Xor(key.data, target.data))
-}
-
-func (key *Key) BigInt() *big.Int {
-	return key.data
 }
 
 func getRandomKey() *big.Int {
