@@ -18,7 +18,7 @@ func NewKey() *Key {
 }
 
 func NewKeyFromBytes(bytes []byte) (*Key, error) {
-	if !isValid(bytes) {
+	if len(bytes) != K {
 		return nil, fmt.Errorf("invalid key length")
 	}
 	return &Key{
@@ -34,10 +34,6 @@ func (key *Key) DistanceTo(target *Key) *big.Int {
 
 func (key *Key) ToBigInt() *big.Int {
 	return key.data
-}
-
-func isValid(bytes []byte) bool {
-	return len(bytes) == K
 }
 
 func getRandomKey() *big.Int {
