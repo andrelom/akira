@@ -32,7 +32,7 @@ func (key *Key) DistanceTo(target *Key) *big.Int {
 	return new(big.Int).Abs(new(big.Int).Xor(key.data, target.data))
 }
 
-func (key *Key) ToBigInt() *big.Int {
+func (key *Key) BigInt() *big.Int {
 	return key.data
 }
 
